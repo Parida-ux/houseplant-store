@@ -3,3 +3,52 @@
     cartSlice.js      ✅ Your cart logic (actions, reducer)
     store.js          ✅ Configure Redux store here
   index.js            ✅ Integrate store into React app
+
+// src/redux/cartSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  items: [],
+  totalQuantity: 0,
+  totalPrice: 0,
+};
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    addToCart(state, action) {
+      const item = state.items.find(i => i.id === action.payload.id);
+      if (!item) {
+        state.items.push({ ...action.payload, quantity: 1 });
+      }
+      state.totalQuantity++;
+      state.totalPrice += action.payload.price;
+    },
+    incrementItem(state, action) {
+      const item = state.items.find(i => i.id === action.payload);
+      item.quantity++;
+      state.totalQuantity++;
+      state.totalPrice += item.price;
+    },
+    decrementItem(state, action) {
+      const item = state.items.find(i => i.id === action.payload);
+      if (item.quantity > 1) {
+        item.quantity--;
+        state.totalQuantity--;
+        state.totalPrice -= item.price;
+      }
+    },
+    removeItem(state, action) {
+      const item = state.items.find(i => i.id === action.payload);
+      if (item) {
+        state.totalQuantity -= item.quantity;
+        state.totalPrice -= item.price * item.quantity;
+        state.items = state.items.filter(i => i.id !== action.payload);
+      }
+    },
+  },
+});
+
+export const { addToCart, incrementItem, decrementItem, removeItem } = cartSlice.actions;
+export default cartSlice.reducer;
