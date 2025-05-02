@@ -1,0 +1,5 @@
+/src
+  /redux
+    cartSlice.js      ✅ Your cart logic (actions, reducer)
+    store.js          ✅ Configure Redux store here
+  index.js            ✅ Integrate store into React app
